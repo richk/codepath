@@ -52,7 +52,7 @@ public class ToDoDbHelper extends SQLiteOpenHelper{
 	}
 	
 	public void update(int id, ContentValues contentValues) {
-		Log.d(LOG_TAG, "delete()::id="+id);
+		Log.d(LOG_TAG, "update()::id="+id);
 	    initDb();
 	    String whereClause = "_id=?";
 		String whereArgs[] = new String[]{String.valueOf(id)};

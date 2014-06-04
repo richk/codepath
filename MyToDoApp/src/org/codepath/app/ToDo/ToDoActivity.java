@@ -20,22 +20,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 public class ToDoActivity extends Activity {
 	private static final String LOG_TAG = "ToDoActivity";
 	private static final int EDIT_ACTIVITY_REQUEST_CODE = 20;
-	private static final String ITEM_TABLE_PROJECTION = BaseColumns._ID + "," + ToDoDBContracts.ITEM_STRING_COLUMN_NAME;
+	private static final String ITEM_TABLE_PROJECTION = BaseColumns._ID + "," + ToDoDBContracts.ITEM_STRING_COLUMN_NAME + "," + ToDoDBContracts.ITEM_DONE_COLUMN_NAME;
 	
 	public static final int EDIT_ACTIVITY_RESULT_OK = 21;
 	public static final String ITEM_STRING_KEY = "ItemString";
 	public static final String ITEM_POS_KEY = "ItemPos";
 	
-	private SimpleCursorAdapter mItemsAdapter;
+	private CursorAdapter mItemsAdapter;
 	private ListView mLv;
 	private EditText mEditText;
 	private Button mAddButton;
@@ -57,9 +56,7 @@ public class ToDoActivity extends Activity {
 		mLv = (ListView)findViewById(R.id.listView1);
 		todoDbHelper = new ToDoDbHelper(this);
 		final Cursor cursor = todoDbHelper.rawQuery("Select "+ ITEM_TABLE_PROJECTION + " from " + ToDoDBContracts.ITEM_TABLE_NAME, null);
-		final String[] fromColumns = new String[] {ToDoDBContracts.ITEM_STRING_COLUMN_NAME};
-		final int[] toControlIDs = new int[] {android.R.id.text1};
-		mItemsAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, fromColumns, toControlIDs, 0);
+		mItemsAdapter = new ToDoListCursorAdapter(this, cursor, todoDbHelper);
 		mLv.setAdapter(mItemsAdapter);
 		Log.d(LOG_TAG, "onCreate()::Number of items in ItemsAdapter:" + mItemsAdapter.getCount());
 		mLv.setOnItemLongClickListener(new OnItemLongClickListener() {
